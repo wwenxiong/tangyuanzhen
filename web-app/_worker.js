@@ -54,10 +54,21 @@ async function ensureSchemaAndSeed(db, env, request) {
     await db.prepare(sql).run();
   }
 
-  // 检查是否已有数据
-  const { results } = await db.prepare('SELECT COUNT(*) AS cnt FROM branches').all();
-  const count = results && results[0] ? results[0].cnt : 0;
-  if (count > 0) return;
+  // 检查是否已有完整数据
+  const { results: bRes } = await db.prepare('SELECT COUNT(*) AS cnt FROM branches').all();
+  const { results: rRes } = await db.prepare('SELECT COUNT(*) AS cnt FROM records').all();
+  const branchCount = bRes && bRes[0] ? bRes[0].cnt : 0;
+  const recordCount = rRes && rRes[0] ? rRes[0].cnt : 0;
+  if (branchCount >= 27 && recordCount >= 6400) return;
+
+  // 如果之前存在未导入全的残余数据，先清空
+  if (branchCount > 0) {
+    await db.batch([
+      db.prepare('DELETE FROM records'),
+      db.prepare('DELETE FROM members'),
+      db.prepare('DELETE FROM branches')
+    ]);
+  }
 
   // 读取种子数据（优先缓存，其次从静态 /initial-data.js 抓取）
   let initialData = _seedCache;
@@ -86,39 +97,56 @@ async function ensureSchemaAndSeed(db, env, request) {
 
   if (!initialData || !initialData.branches) return;
 
-  // 分批导入，避免单次 batch 过大
-  const BATCH_SIZE = 100;
+  const ROW_CHUNK = 25; // 每条 SQL 批量插入 25 行，极大缩减 subrequest 调用次数
+  const STMT_BATCH = 50; // 单次 db.batch 执行 50 条 SQL
 
-  // 党支部
-  for (let i = 0; i < initialData.branches.length; i += BATCH_SIZE) {
-    const batch = initialData.branches.slice(i, i + BATCH_SIZE);
-    const stmts = batch.map(b =>
-      db.prepare('INSERT INTO branches (id, name, created_at) VALUES (?, ?, ?)')
-        .bind(b.id, b.name, b.createdAt || new Date().toISOString())
-    );
-    await db.batch(stmts);
-  }
+  // 1. 党支部
+  const branchStmts = initialData.branches.map(b =>
+    db.prepare('INSERT INTO branches (id, name, created_at) VALUES (?, ?, ?)')
+      .bind(b.id, b.name, b.createdAt || new Date().toISOString())
+  );
+  await db.batch(branchStmts);
 
-  // 党员
+  // 2. 党员
   const members = initialData.members || [];
-  for (let i = 0; i < members.length; i += BATCH_SIZE) {
-    const batch = members.slice(i, i + BATCH_SIZE);
-    const stmts = batch.map(m =>
-      db.prepare('INSERT INTO members (id, branch_id, name, join_date, created_at) VALUES (?, ?, ?, ?, ?)')
-        .bind(m.id, m.branchId, m.name, m.joinDate || '', m.createdAt || new Date().toISOString())
-    );
-    await db.batch(stmts);
+  const memberStmts = [];
+  for (let i = 0; i < members.length; i += ROW_CHUNK) {
+    const chunk = members.slice(i, i + ROW_CHUNK);
+    const placeholders = chunk.map(() => '(?, ?, ?, ?, ?)').join(',');
+    const sql = `INSERT INTO members (id, branch_id, name, join_date, created_at) VALUES ${placeholders}`;
+    const params = [];
+    for (const m of chunk) {
+      params.push(m.id, m.branchId, m.name, m.joinDate || '', m.createdAt || new Date().toISOString());
+    }
+    memberStmts.push(db.prepare(sql).bind(...params));
+  }
+  for (let i = 0; i < memberStmts.length; i += STMT_BATCH) {
+    await db.batch(memberStmts.slice(i, i + STMT_BATCH));
   }
 
-  // 培训记录
+  // 3. 培训记录 (全量 6474 条)
   const records = initialData.records || [];
-  for (let i = 0; i < records.length; i += BATCH_SIZE) {
-    const batch = records.slice(i, i + BATCH_SIZE);
-    const stmts = batch.map(r =>
-      db.prepare('INSERT INTO records (id, member_id, branch_id, training_date, method_and_content, duration, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)')
-        .bind(r.id, r.memberId, r.branchId, r.trainingDate || '', r.methodAndContent || '', r.duration || '', r.createdAt || new Date().toISOString())
-    );
-    await db.batch(stmts);
+  const recordStmts = [];
+  for (let i = 0; i < records.length; i += ROW_CHUNK) {
+    const chunk = records.slice(i, i + ROW_CHUNK);
+    const placeholders = chunk.map(() => '(?, ?, ?, ?, ?, ?, ?)').join(',');
+    const sql = `INSERT INTO records (id, member_id, branch_id, training_date, method_and_content, duration, created_at) VALUES ${placeholders}`;
+    const params = [];
+    for (const r of chunk) {
+      params.push(
+        r.id,
+        r.memberId,
+        r.branchId,
+        r.trainingDate || '',
+        r.methodAndContent || '',
+        r.duration || '',
+        r.createdAt || new Date().toISOString()
+      );
+    }
+    recordStmts.push(db.prepare(sql).bind(...params));
+  }
+  for (let i = 0; i < recordStmts.length; i += STMT_BATCH) {
+    await db.batch(recordStmts.slice(i, i + STMT_BATCH));
   }
 
   console.log(`[Seed] 导入完成：${initialData.branches.length} 支部, ${members.length} 党员, ${records.length} 记录`);
