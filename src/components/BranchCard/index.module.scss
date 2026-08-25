@@ -1,0 +1,97 @@
+@use '@/styles/variables.scss' as *;
+
+.card {
+  position: relative;
+  background-color: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.99);
+  }
+}
+
+.active {
+  border: 4rpx solid $color-primary;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: $radius-sm;
+  background: $color-gradient-header;
+  margin-right: $spacing-sm;
+}
+
+.badgeText {
+  font-size: $font-size-xs;
+  color: $color-text-white;
+  font-weight: $font-weight-semibold;
+}
+
+.name {
+  flex: 1;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  @include text-ellipsis;
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+}
+
+.statItem {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+}
+
+.statNum {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
+  margin-right: $spacing-xs;
+}
+
+.statLabel {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.statDivider {
+  width: 1rpx;
+  height: 40rpx;
+  background-color: $color-divider;
+}
+
+.activeTag {
+  position: absolute;
+  top: $spacing-sm;
+  right: $spacing-sm;
+  background-color: $color-primary;
+  border-radius: $radius-xs;
+  padding: 4rpx 12rpx;
+}
+
+.activeTagText {
+  font-size: $font-size-xs;
+  color: $color-text-white;
+}

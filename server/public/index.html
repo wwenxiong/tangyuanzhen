@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>党员培训记录管理系统</title>
+  <link rel="stylesheet" href="styles.css?v=1.0.5">
+</head>
+<body>
+  <!-- 顶部导航 -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-icon">★</span>
+        <span class="brand-title">党员培训记录管理系统</span>
+      </div>
+      <nav class="tabs">
+        <button class="tab-btn active" data-view="table">培训记录表</button>
+        <button class="tab-btn" data-view="branches">党支部管理</button>
+        <button class="tab-btn" data-view="data">数据管理</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="app-main" id="appMain">
+    <!-- 内容由 JS 动态渲染 -->
+  </main>
+
+  <!-- 通用弹窗容器 -->
+  <div id="modalContainer"></div>
+
+  <!-- 提示Toast -->
+  <div id="toast" class="toast"></div>
+
+  <script src="initial-data.js?v=1.0.5"></script>
+  <script src="xlsx.full.min.js?v=1.0.5"></script>
+  <script src="store.js?v=1.0.5"></script>
+  <script src="app.js?v=1.0.5"></script>
+</body>
+</html>

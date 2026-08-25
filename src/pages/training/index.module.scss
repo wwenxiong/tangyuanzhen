@@ -1,0 +1,172 @@
+@use '@/styles/variables.scss' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0 $page-padding;
+  padding-bottom: 160rpx;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md 0;
+}
+
+.branchInfo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.branchName {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  @include text-ellipsis;
+}
+
+.branchSubText {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-top: 4rpx;
+}
+
+.switchBtn {
+  padding: $spacing-xs $spacing-md;
+  background-color: $color-tag-bg;
+  border-radius: $radius-button;
+  flex-shrink: 0;
+}
+
+.switchText {
+  font-size: $font-size-sm;
+  color: $color-primary;
+}
+
+.tabs {
+  display: flex;
+  background-color: $color-bg-hover;
+  border-radius: $radius-button;
+  padding: 4rpx;
+  margin-bottom: $spacing-md;
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64rpx;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.tabActive {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64rpx;
+  border-radius: $radius-button;
+  background-color: $color-bg-card;
+  font-size: $font-size-sm;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+  box-shadow: $shadow-card;
+}
+
+.list {
+  flex: 1;
+}
+
+.memberGroup {
+  margin-bottom: $spacing-lg;
+}
+
+.memberHeader {
+  display: flex;
+  align-items: center;
+  padding: $spacing-sm 0;
+}
+
+.memberAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: $radius-round;
+  background: $color-gradient-header;
+  margin-right: $spacing-sm;
+  flex-shrink: 0;
+}
+
+.memberAvatarText {
+  font-size: $font-size-sm;
+  color: $color-text-white;
+  font-weight: $font-weight-semibold;
+}
+
+.memberName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-right: $spacing-sm;
+}
+
+.recordCount {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.gotoBtnWrap {
+  padding: $spacing-lg $page-padding;
+}
+
+.gotoBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  background: $color-gradient-header;
+  border-radius: $radius-button;
+  font-size: $font-size-md;
+  color: $color-text-white;
+  font-weight: $font-weight-medium;
+
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: $spacing-md $page-padding;
+  padding-bottom: calc(#{$spacing-md} + env(safe-area-inset-bottom));
+  background-color: $color-bg-card;
+  box-shadow: $shadow-float;
+  z-index: 10;
+}
+
+.addBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  background: $color-gradient-header;
+  border-radius: $radius-button;
+  font-size: $font-size-md;
+  color: $color-text-white;
+  font-weight: $font-weight-medium;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.99);
+  }
+}

@@ -1,0 +1,112 @@
+@use '@/styles/variables.scss' as *;
+
+.record {
+  display: flex;
+  background-color: $color-bg-card;
+  border-radius: $radius-md;
+  padding: $spacing-md $spacing-lg;
+  margin-bottom: $spacing-sm;
+  box-shadow: $shadow-card;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.95;
+  }
+}
+
+.indexBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: $radius-round;
+  background-color: $color-tag-bg;
+  margin-right: $spacing-md;
+  flex-shrink: 0;
+  margin-top: 4rpx;
+}
+
+.indexText {
+  font-size: $font-size-xs;
+  color: $color-primary;
+  font-weight: $font-weight-semibold;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.memberRow {
+  margin-bottom: $spacing-xs;
+}
+
+.memberName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.dateRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+}
+
+.dateLabel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-right: $spacing-xs;
+  flex-shrink: 0;
+}
+
+.dateValue {
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+  margin-right: $spacing-sm;
+}
+
+.durationTag {
+  background-color: $color-tag-bg;
+  border-radius: $radius-xs;
+  padding: 2rpx 12rpx;
+}
+
+.durationText {
+  font-size: $font-size-xs;
+  color: $color-tag-text;
+}
+
+.contentRow {
+  display: flex;
+  flex-direction: column;
+}
+
+.contentLabel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-bottom: 4rpx;
+}
+
+.contentValue {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+}
+
+.deleteBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48rpx;
+  height: 48rpx;
+  flex-shrink: 0;
+  margin-left: $spacing-sm;
+}
+
+.deleteIcon {
+  font-size: 36rpx;
+  color: $color-text-tertiary;
+}

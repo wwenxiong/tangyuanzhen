@@ -1,0 +1,131 @@
+@use '@/styles/variables.scss' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0 $page-padding;
+  padding-bottom: 160rpx;
+}
+
+.scrollContent {
+  flex: 1;
+}
+
+.section {
+  margin-bottom: $spacing-lg;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md 0 $spacing-sm;
+}
+
+.sectionTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.selectAllBtn {
+  padding: $spacing-xs $spacing-md;
+  background-color: $color-tag-bg;
+  border-radius: $radius-button;
+}
+
+.selectAllText {
+  font-size: $font-size-sm;
+  color: $color-primary;
+}
+
+.selectedCount {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  display: block;
+  margin-bottom: $spacing-sm;
+}
+
+.formItem {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: $spacing-md;
+}
+
+.label {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-sm;
+}
+
+.input {
+  width: 100%;
+  height: 80rpx;
+  background-color: $color-bg-card;
+  border-radius: $radius-sm;
+  padding: 0 $spacing-md;
+  font-size: $font-size-md;
+  box-sizing: border-box;
+  border: 1rpx solid $color-border;
+}
+
+.textarea {
+  width: 100%;
+  height: 200rpx;
+  background-color: $color-bg-card;
+  border-radius: $radius-sm;
+  padding: $spacing-md;
+  font-size: $font-size-md;
+  box-sizing: border-box;
+  border: 1rpx solid $color-border;
+}
+
+.preview {
+  background-color: $color-tag-bg;
+  border-radius: $radius-md;
+  padding: $spacing-md $spacing-lg;
+  margin-top: $spacing-md;
+}
+
+.previewTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.previewText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: $spacing-md $page-padding;
+  padding-bottom: calc(#{$spacing-md} + env(safe-area-inset-bottom));
+  background-color: $color-bg-card;
+  box-shadow: $shadow-float;
+  z-index: 10;
+}
+
+.submitBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  background: $color-gradient-header;
+  border-radius: $radius-button;
+  font-size: $font-size-md;
+  color: $color-text-white;
+  font-weight: $font-weight-medium;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.99);
+  }
+}

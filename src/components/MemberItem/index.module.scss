@@ -1,0 +1,92 @@
+@use '@/styles/variables.scss' as *;
+
+.item {
+  display: flex;
+  align-items: center;
+  background-color: $color-bg-card;
+  border-radius: $radius-md;
+  padding: $spacing-md $spacing-lg;
+  margin-bottom: $spacing-sm;
+  box-shadow: $shadow-card;
+  transition: all $transition-base;
+
+  &:active {
+    background-color: $color-bg-hover;
+  }
+}
+
+.selected {
+  border: 2rpx solid $color-primary;
+  background-color: $color-tag-bg;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: $radius-round;
+  border: 2rpx solid $color-border;
+  margin-right: $spacing-md;
+  flex-shrink: 0;
+}
+
+.checkboxChecked {
+  background-color: $color-primary;
+  border-color: $color-primary;
+}
+
+.checkmark {
+  font-size: $font-size-sm;
+  color: $color-text-white;
+  font-weight: $font-weight-bold;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: $radius-round;
+  background: $color-gradient-header;
+  margin-right: $spacing-md;
+  flex-shrink: 0;
+}
+
+.avatarText {
+  font-size: $font-size-md;
+  color: $color-text-white;
+  font-weight: $font-weight-semibold;
+}
+
+.info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.name {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  @include text-ellipsis;
+}
+
+.subText {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-top: 4rpx;
+}
+
+.deleteBtn {
+  padding: $spacing-xs $spacing-sm;
+  flex-shrink: 0;
+}
+
+.deleteText {
+  font-size: $font-size-sm;
+  color: $color-error;
+}

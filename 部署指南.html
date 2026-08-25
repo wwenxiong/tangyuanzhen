@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>部署指南 - 党员培训记录管理系统</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      line-height: 1.8;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    h1 {
+      color: #d43030;
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+    h2 {
+      color: #d43030;
+      font-size: 20px;
+      margin: 32px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    h3 {
+      font-size: 16px;
+      margin: 20px 0 8px;
+      color: #333;
+    }
+    .step {
+      background: #fafafa;
+      border-left: 4px solid #d43030;
+      padding: 16px 20px;
+      margin: 12px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .step-num {
+      display: inline-block;
+      background: #d43030;
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
+      text-align: center;
+      border-radius: 50%;
+      font-size: 14px;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+    code {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 13px;
+    }
+    .code-block {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 12px 0;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .tip {
+      background: #e8f5e9;
+      border-left: 4px solid #4caf50;
+      padding: 12px 16px;
+      margin: 12px 0;
+      border-radius: 0 8px 8px 0;
+      font-size: 14px;
+    }
+    .warn {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 12px 16px;
+      margin: 12px 0;
+      border-radius: 0 8px 8px 0;
+      font-size: 14px;
+    }
+    .btn {
+      display: inline-block;
+      background: #d43030;
+      color: #fff;
+      padding: 10px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 14px;
+      margin: 8px 4px;
+      transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.9; }
+    .btn-outline {
+      background: #fff;
+      color: #d43030;
+      border: 2px solid #d43030;
+    }
+    ul, ol {
+      margin-left: 24px;
+      margin-bottom: 12px;
+    }
+    li { margin-bottom: 6px; }
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+      text-align: center;
+      color: #999;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>党员培训记录管理系统</h1>
+    <p class="subtitle">联网部署指南 — 让所有人通过一个链接共享使用</p>
+
+    <div class="tip">
+      <strong>方案说明：</strong>将系统部署到 <strong>Render</strong>（免费云平台），所有人通过同一个网址访问，数据共享存储在云端数据库中。
+    </div>
+
+    <h2>方案一：Render 一键部署（推荐）</h2>
+
+    <div class="step">
+      <span class="step-num">1</span><strong>注册 GitHub 账号</strong>
+      <p style="margin-top:8px;">访问 <a href="https://github.com/signup" target="_blank">github.com/signup</a> 注册账号（如已有可跳过）</p>
+    </div>
+
+    <div class="step">
+      <span class="step-num">2</span><strong>上传项目代码到 GitHub</strong>
+      <ol style="margin-top:8px;">
+        <li>在 GitHub 上新建一个仓库（如 <code>party-training</code>）</li>
+        <li>将本项目的 <code>server</code> 文件夹内容上传到仓库</li>
+        <li>同时把 <code>web-app</code> 文件夹也上传到仓库根目录</li>
+      </ol>
+    </div>
+
+    <div class="step">
+      <span class="step-num">3</span><strong>注册 Render 账号</strong>
+      <p style="margin-top:8px;">访问 <a href="https://render.com" target="_blank">render.com</a>，点击 Sign Up，用 GitHub 账号注册</p>
+    </div>
+
+    <div class="step">
+      <span class="step-num">4</span><strong>在 Render 创建 PostgreSQL 数据库</strong>
+      <ol style="margin-top:8px;">
+        <li>进入 Render 控制台，点击 <code>New +</code> → <code>PostgreSQL</code></li>
+        <li>名称填 <code>party-training-db</code></li>
+        <li>Database 填 <code>party_training</code></li>
+        <li>User 自动生成即可</li>
+        <li>Plan 选 <code>Free</code></li>
+        <li>点击 <code>Create Database</code></li>
+        <li>创建完成后，记下 <strong>Internal Database URL</strong>（后面用）</li>
+      </ol>
+    </div>
+
+    <div class="step">
+      <span class="step-num">5</span><strong>在 Render 创建 Web 服务</strong>
+      <ol style="margin-top:8px;">
+        <li>点击 <code>New +</code> → <code>Web Service</code></li>
+        <li>选择刚才上传的 GitHub 仓库</li>
+        <li>名称填 <code>party-training-system</code></li>
+        <li>Runtime 选 <code>Node</code></li>
+        <li>Build Command 填 <code>cd server && npm install</code></li>
+        <li>Start Command 填 <code>cd server && node index.js</code></li>
+        <li>Plan 选 <code>Free</code></li>
+      </ol>
+    </div>
+
+    <div class="step">
+      <span class="step-num">6</span><strong>配置环境变量</strong>
+      <p style="margin-top:8px;">在 Web 服务的 Environment 页面添加：</p>
+      <div class="code-block">Key:   DATABASE_URL
+Value: （粘贴第4步的 Internal Database URL）</div>
+    </div>
+
+    <div class="step">
+      <span class="step-num">7</span><strong>部署并获取公网链接</strong>
+      <ol style="margin-top:8px;">
+        <li>点击 <code>Create Web Service</code> 开始部署</li>
+        <li>等待 2-3 分钟构建完成</li>
+        <li>部署成功后，页面顶部会显示公网地址，如：<code>https://party-training-system.onrender.com</code></li>
+        <li>把这个链接发给别人即可使用！</li>
+      </ol>
+    </div>
+
+    <div class="tip">
+      <strong>首次访问：</strong>服务器首次启动时会自动导入 Excel 初始数据（27个党支部、685名党员、6493条记录），可能需要 1-2 分钟。
+    </div>
+
+    <h2>方案二：本地运行 + 内网穿透</h2>
+    <p>如果不想部署到云端，可以本地运行后用内网穿透工具让其他人访问：</p>
+
+    <div class="step">
+      <span class="step-num">1</span>双击运行 <code>启动服务器.bat</code>
+    </div>
+    <div class="step">
+      <span class="step-num">2</span>下载 <a href="https://www.cpolar.com" target="_blank">cpolar</a>（免费内网穿透工具）
+    </div>
+    <div class="step">
+      <span class="step-num">3</span>安装后运行：
+      <div class="code-block">cpolar http 8080</div>
+    </div>
+    <div class="step">
+      <span class="step-num">4</span>cpolar 会生成一个公网地址，发给其他人即可
+    </div>
+
+    <div class="warn">
+      <strong>注意：</strong>本地运行方案需要你的电脑保持开机，关机后其他人无法访问。
+    </div>
+
+    <h2>常见问题</h2>
+
+    <h3>Q: 数据会丢失吗？</h3>
+    <p>Render 免费层的 PostgreSQL 数据库 90 天后会被清空。如需长期使用，建议定期在"数据管理"页面导出备份。</p>
+
+    <h3>Q: 免费层有什么限制？</h3>
+    <ul>
+      <li>Web 服务 15 分钟无访问会自动休眠，再次访问时自动唤醒（约 30 秒）</li>
+      <li>PostgreSQL 免费层 90 天有效期</li>
+      <li>每月 750 小时免费运行时间</li>
+    </ul>
+
+    <h3>Q: 多人同时编辑会冲突吗？</h3>
+    <p>系统采用"后写入覆盖"策略，最后保存的数据生效。同时查看不会冲突。</p>
+
+    <h3>Q: 如何更新数据？</h3>
+    <p>直接在网页上操作即可，所有人看到的数据是同步的（刷新页面获取最新数据）。</p>
+
+    <div class="footer">
+      党员培训记录管理系统 · 汤原镇 · 前后端分离架构
+    </div>
+  </div>
+</body>
+</html>

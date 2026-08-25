@@ -1,0 +1,147 @@
+@use '@/styles/variables.scss' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0 $page-padding;
+  padding-bottom: 160rpx;
+}
+
+.searchBar {
+  padding: $spacing-md 0;
+}
+
+.searchInput {
+  width: 100%;
+  height: 72rpx;
+  background-color: $color-bg-card;
+  border-radius: $radius-button;
+  padding: 0 $spacing-lg;
+  font-size: $font-size-sm;
+  box-sizing: border-box;
+}
+
+.list {
+  flex: 1;
+}
+
+.cardWrapper {
+  position: relative;
+}
+
+.deleteBtn {
+  position: absolute;
+  top: $spacing-sm;
+  right: $spacing-sm;
+  padding: 8rpx $spacing-sm;
+  z-index: 1;
+}
+
+.deleteText {
+  font-size: $font-size-xs;
+  color: $color-error;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: $spacing-md $page-padding;
+  padding-bottom: calc(#{$spacing-md} + env(safe-area-inset-bottom));
+  background-color: $color-bg-card;
+  box-shadow: $shadow-float;
+  z-index: 10;
+}
+
+.addBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  background: $color-gradient-header;
+  border-radius: $radius-button;
+  font-size: $font-size-md;
+  color: $color-text-white;
+  font-weight: $font-weight-medium;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.99);
+  }
+}
+
+.mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.dialog {
+  width: 600rpx;
+  background-color: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-popup;
+}
+
+.dialogTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  text-align: center;
+  display: block;
+  margin-bottom: $spacing-lg;
+}
+
+.dialogInput {
+  width: 100%;
+  height: 80rpx;
+  background-color: $color-bg-page;
+  border-radius: $radius-sm;
+  padding: 0 $spacing-md;
+  font-size: $font-size-md;
+  box-sizing: border-box;
+  margin-bottom: $spacing-lg;
+}
+
+.dialogBtns {
+  display: flex;
+  gap: $spacing-md;
+}
+
+.dialogCancel {
+  @include button-reset;
+  flex: 1;
+  height: $button-height-md;
+  background-color: $color-bg-hover;
+  border-radius: $radius-button;
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.dialogConfirm {
+  @include button-reset;
+  flex: 1;
+  height: $button-height-md;
+  background: $color-gradient-header;
+  border-radius: $radius-button;
+  font-size: $font-size-md;
+  color: $color-text-white;
+  font-weight: $font-weight-medium;
+
+  &:active {
+    opacity: 0.9;
+  }
+}

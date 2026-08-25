@@ -1,0 +1,28 @@
+# 依赖
+node_modules/
+**/node_modules/
+
+# 环境变量（含密钥，禁止提交）
+.env
+.env.*
+**/.env
+**/.env.*
+
+# IDE / 缓存
+.pai/
+.idea/
+.vscode/
+*.log
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 临时 / 测试输出
+*.zip
+_test_export_.xlsx
+Sheet25.xlsx
+Sheet26.xlsx
+
+# 本地构建产物（生产由 Render 托管，不入库）
+dist/
