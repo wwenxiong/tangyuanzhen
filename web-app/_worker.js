@@ -37,42 +37,26 @@ async function readJsonBody(request) {
 
 // ==================== 数据库：建表 + 种子 ====================
 
-const SCHEMA_SQL = `
-CREATE TABLE IF NOT EXISTS branches (
-  id TEXT PRIMARY KEY,
-  name TEXT NOT NULL,
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP
-);
-CREATE TABLE IF NOT EXISTS members (
-  id TEXT PRIMARY KEY,
-  branch_id TEXT NOT NULL,
-  name TEXT NOT NULL,
-  join_date TEXT,
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP
-);
-CREATE TABLE IF NOT EXISTS records (
-  id TEXT PRIMARY KEY,
-  member_id TEXT NOT NULL,
-  branch_id TEXT NOT NULL,
-  training_date TEXT,
-  method_and_content TEXT,
-  duration TEXT,
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP
-);
-CREATE INDEX IF NOT EXISTS idx_members_branch ON members(branch_id);
-CREATE INDEX IF NOT EXISTS idx_records_member ON records(member_id);
-CREATE INDEX IF NOT EXISTS idx_records_branch ON records(branch_id);
-`;
+const SCHEMA_STATEMENTS = [
+  'CREATE TABLE IF NOT EXISTS branches (id TEXT PRIMARY KEY, name TEXT NOT NULL, created_at TEXT DEFAULT CURRENT_TIMESTAMP)',
+  'CREATE TABLE IF NOT EXISTS members (id TEXT PRIMARY KEY, branch_id TEXT NOT NULL, name TEXT NOT NULL, join_date TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP)',
+  'CREATE TABLE IF NOT EXISTS records (id TEXT PRIMARY KEY, member_id TEXT NOT NULL, branch_id TEXT NOT NULL, training_date TEXT, method_and_content TEXT, duration TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP)',
+  'CREATE INDEX IF NOT EXISTS idx_members_branch ON members(branch_id)',
+  'CREATE INDEX IF NOT EXISTS idx_records_member ON records(member_id)',
+  'CREATE INDEX IF NOT EXISTS idx_records_branch ON records(branch_id)'
+];
 
 let _seedCache = null;
 
-async function ensureSchemaAndSeed(db, request) {
-  // 建表（幂等）
-  await db.exec(SCHEMA_SQL);
+async function ensureSchemaAndSeed(db, env, request) {
+  // 建表（逐条 prepare/run 执行，完美兼容 Cloudflare D1 规范）
+  for (const sql of SCHEMA_STATEMENTS) {
+    await db.prepare(sql).run();
+  }
 
   // 检查是否已有数据
   const { results } = await db.prepare('SELECT COUNT(*) AS cnt FROM branches').all();
-  const count = results[0].cnt;
+  const count = results && results[0] ? results[0].cnt : 0;
   if (count > 0) return;
 
   // 读取种子数据（优先缓存，其次从静态 /initial-data.js 抓取）
@@ -80,8 +64,14 @@ async function ensureSchemaAndSeed(db, request) {
   if (!initialData) {
     try {
       const url = new URL(request.url);
-      const initResp = await fetch(`${url.origin}/initial-data.js`);
-      if (initResp.ok) {
+      const targetUrl = `${url.origin}/initial-data.js`;
+      let initResp = null;
+      if (env && env.ASSETS && typeof env.ASSETS.fetch === 'function') {
+        initResp = await env.ASSETS.fetch(new Request(targetUrl));
+      } else {
+        initResp = await fetch(targetUrl);
+      }
+      if (initResp && initResp.ok) {
         const text = await initResp.text();
         const match = text.match(/window\.INITIAL_DATA\s*=\s*(\{[\s\S]*\});\s*$/);
         if (match) {
@@ -134,10 +124,14 @@ async function ensureSchemaAndSeed(db, request) {
   console.log(`[Seed] 导入完成：${initialData.branches.length} 支部, ${members.length} 党员, ${records.length} 记录`);
 }
 
-async function resetToSeed(db, request) {
+async function resetToSeed(db, env, request) {
   _seedCache = null;
-  await db.exec('DELETE FROM records; DELETE FROM members; DELETE FROM branches;');
-  await ensureSchemaAndSeed(db, request);
+  await db.batch([
+    db.prepare('DELETE FROM records'),
+    db.prepare('DELETE FROM members'),
+    db.prepare('DELETE FROM branches')
+  ]);
+  await ensureSchemaAndSeed(db, env, request);
 }
 
 // ==================== 路由处理 ====================
@@ -183,7 +177,7 @@ function matchRoute(pathname) {
   return null;
 }
 
-async function handleApi({ db, route, method, body, request }) {
+async function handleApi({ db, env, route, method, body, request }) {
   switch (route.name) {
 
     // ============ 党支部 ============
@@ -504,7 +498,7 @@ async function handleApi({ db, route, method, body, request }) {
     // ============ 重置为初始种子数据 ============
     case 'reset': {
       if (method !== 'POST') return errorResponse('Method Not Allowed', 405);
-      await resetToSeed(db, request);
+      await resetToSeed(db, env, request);
       return jsonResponse({ success: true, message: '已重置为初始数据' });
     }
 
@@ -544,7 +538,7 @@ export default {
 
     // 建表 + 种子数据（幂等）
     try {
-      await ensureSchemaAndSeed(db, request);
+      await ensureSchemaAndSeed(db, env, request);
     } catch (e) {
       console.error('[Init] 初始化失败:', e);
       return errorResponse('数据库初始化失败: ' + e.message, 500);
@@ -564,6 +558,7 @@ export default {
     try {
       return await handleApi({
         db,
+        env,
         route,
         method: request.method,
         body,
